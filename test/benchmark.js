@@ -4,7 +4,7 @@ var format = require("util").format;
 var redis_client = require("redis").createClient();
 var express = require("express");
 var throttle = require("express-throttle");
-var wrapper = require("../");
+var RedisStore = require("../");
 
 var app = express();
 
@@ -25,13 +25,14 @@ app.use(function(req, res, next) {
 
 app.get("/throttle", throttle({
 	"key": key,
-	"rate": "1/s"
+	"rate": "1/10s",
+	"store": new RedisStore(redis_client)
 }));
 
-app.get("/throttle-redis", throttle({
+app.get("/throttle-fixed", throttle({
 	"key": key,
-	"rate": "1/s",
-	"store": wrapper(redis_client)
+	"rate": "1/10s:fixed",
+	"store": new RedisStore(redis_client)
 }));
 
 app.get("*", function(req, res) {
