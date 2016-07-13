@@ -27,11 +27,11 @@ app.post("/search", throttle({
 })
 ```
 
-Neither `express-throttle` nor `express-throttle-redis` will expire / remove / cleanup any keys. This means that memory usage will grow unbounded as new requests are being processed. Thus, it is recommended to have a separate redis instance only for throttling purposes with a sensible `maxmemory` setting and `maxmemory-policy` set to `allkeys-lru`. Furthermore, you may want to disable the persistence layer altogether. Consult the [Redis documentation](http://redis.io/documentation) for more information. Also, beware of the [limitations](https://github.com/GlurG/express-throttle/blob/master/README.md) of using this package.
+Keys are automatically expired after *Y x t* ms as defined [here](https://github.com/GlurG/express-throttle#user-content-options). However, as requests are processed new keys will be created and memory usage may grow unbounded. Thus, it is recommended to have a separate redis instance only for throttling purposes with a sensible `maxmemory` setting and `maxmemory-policy` set to `allkeys-lru`. Furthermore, you may want to disable the persistence layer altogether. Consult the [Redis documentation](http://redis.io/documentation) for more information. Also, beware of the [limitations](https://github.com/GlurG/express-throttle/blob/master/README.md) of using this package.
 
 ## Performance
 
-Apache Bench was run against [benchmark.js](https://github.com/GlurG/express-throttle-redis/blob/master/test/benchmark.js) and a Redis instance with `maxmemory = 8mb` and `maxmemory-policy = allkeys-lru`.
+Apache Bench was run against [benchmark.js](https://github.com/GlurG/express-throttle-redis/blob/master/test/benchmark.js) and a Redis 3.2 instance with `maxmemory = 8mb` and `maxmemory-policy = allkeys-lru`.
 
 Performance tests for `express-throttle` can be found [here](https://github.com/GlurG/express-throttle/blob/master/Benchmark.md) for comparison.
 
@@ -51,23 +51,23 @@ Document Path:          /throttle
 Document Length:        0 bytes
 
 Concurrency Level:      1
-Time taken for tests:   46.975 seconds
+Time taken for tests:   50.419 seconds
 Complete requests:      100000
 Failed requests:        0
-Non-2xx responses:      22649
-Total transferred:      10139735 bytes
+Non-2xx responses:      21494
+Total transferred:      10122410 bytes
 HTML transferred:       0 bytes
-Requests per second:    2128.81 [#/sec] (mean)
-Time per request:       0.470 [ms] (mean)
-Time per request:       0.470 [ms] (mean, across all concurrent requests)
-Transfer rate:          210.80 [Kbytes/sec] received
+Requests per second:    1983.38 [#/sec] (mean)
+Time per request:       0.504 [ms] (mean)
+Time per request:       0.504 [ms] (mean, across all concurrent requests)
+Transfer rate:          196.06 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.2      0       1
-Processing:     0    0   0.6      0      16
-Waiting:        0    0   0.6      0      16
-Total:          0    0   0.6      0      16
+Processing:     0    0   0.6      0      18
+Waiting:        0    0   0.6      0      18
+Total:          0    0   0.6      0      18
 
 Percentage of the requests served within a certain time (ms)
   50%      0
@@ -78,7 +78,7 @@ Percentage of the requests served within a certain time (ms)
   95%      1
   98%      1
   99%      1
- 100%     16 (longest request)
+ 100%     18 (longest request)
 ```
 
 ### Throttling (Redis store, fixed windows)
@@ -97,23 +97,23 @@ Document Path:          /throttle-fixed
 Document Length:        0 bytes
 
 Concurrency Level:      1
-Time taken for tests:   48.573 seconds
+Time taken for tests:   51.864 seconds
 Complete requests:      100000
 Failed requests:        0
-Non-2xx responses:      22072
-Total transferred:      10131080 bytes
+Non-2xx responses:      23165
+Total transferred:      10147475 bytes
 HTML transferred:       0 bytes
-Requests per second:    2058.77 [#/sec] (mean)
-Time per request:       0.486 [ms] (mean)
-Time per request:       0.486 [ms] (mean, across all concurrent requests)
-Transfer rate:          203.69 [Kbytes/sec] received
+Requests per second:    1928.12 [#/sec] (mean)
+Time per request:       0.519 [ms] (mean)
+Time per request:       0.519 [ms] (mean, across all concurrent requests)
+Transfer rate:          191.07 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.2      0       1
-Processing:     0    0   0.6      0      16
-Waiting:        0    0   0.6      0      16
-Total:          0    0   0.6      0      16
+Processing:     0    0   0.6      0      17
+Waiting:        0    0   0.6      0      17
+Total:          0    0   0.7      0      17
 
 Percentage of the requests served within a certain time (ms)
   50%      0
@@ -124,5 +124,5 @@ Percentage of the requests served within a certain time (ms)
   95%      1
   98%      1
   99%      1
- 100%     16 (longest request)
+ 100%     17 (longest request)
 ```
