@@ -31,7 +31,8 @@ app.get("/throttle", throttle({
 
 app.get("/throttle-fixed", throttle({
 	"key": key,
-	"rate": "1/10s:fixed",
+	"burst": 1,
+	"period": "10s",
 	"store": new RedisStore(redis_client)
 }));
 
