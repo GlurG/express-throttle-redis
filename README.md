@@ -27,7 +27,7 @@ app.post("/search", throttle({
 })
 ```
 
-Keys are automatically expired after *Y x t* ms as defined [here](https://github.com/GlurG/express-throttle#user-content-options). However, as requests are processed new keys will be created and memory usage may grow unbounded. Thus, it is recommended to have a separate redis instance only for throttling purposes with a sensible `maxmemory` setting and `maxmemory-policy` set to `allkeys-lru`. Furthermore, you may want to disable the persistence layer altogether. Consult the [Redis documentation](http://redis.io/documentation) for more information. Also, beware of the [limitations](https://github.com/GlurG/express-throttle/blob/master/README.md) of using this package.
+Neither `express-throttle` nor `express-throttle-redis` will expire / remove / cleanup any keys. This means that memory usage will grow unbounded as new requests are being processed. Thus, it is recommended to have a separate redis instance only for throttling purposes with a sensible `maxmemory` setting and `maxmemory-policy` set to `allkeys-lru`. Furthermore, you may want to disable the persistence layer altogether. Consult the [Redis documentation](http://redis.io/documentation) for more information.
 
 ## Performance
 
